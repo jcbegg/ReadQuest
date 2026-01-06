@@ -737,8 +737,44 @@
 
                 const handleDeleteClick = (logId) => {
                     if (confirm("Delete this entry?")) {
-                        setLogs(logs.filter(l => l.id !== logId));
-                        showNotification("Entry deleted.");
+                        // 1. Identify context
+                        const logToDelete = logs.find(l => l.id === logId);
+                        const updatedLogs = logs.filter(l => l.id !== logId);
+                        
+                        // 2. Calculate new progress for the book
+                        let newPage = 0;
+                        if (logToDelete) {
+                            const bookLogs = updatedLogs
+                                .filter(l => l.bookId === logToDelete.bookId)
+                                .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort desc
+                            
+                            if (bookLogs.length > 0) {
+                                newPage = bookLogs[0].endPage;
+                            }
+                        }
+
+                        // 3. Update Books State
+                        if (logToDelete) {
+                            const updatedBooks = books.map(b => {
+                                if (b.id === logToDelete.bookId) {
+                                    // Check status updates
+                                    let newStatus = b.status;
+                                    if (newPage < b.totalPages && b.status === 'completed') {
+                                        newStatus = 'reading';
+                                    }
+                                    return { ...b, currentPage: newPage, status: newStatus };
+                                }
+                                return b;
+                            });
+                            setBooks(updatedBooks);
+                        }
+
+                        // 4. Update Logs & UI
+                        setLogs(updatedLogs);
+                        if (logToDelete && activeBookId === logToDelete.bookId) {
+                            setEndPage(newPage);
+                        }
+                        showNotification("Entry deleted and progress synced.");
                     }
                 };
 
