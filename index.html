@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReadQuest - Reading Tracker (Shelves)</title>
+    <title>ReadQuest - Reading Tracker (Hot Pink)</title>
     
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -25,13 +25,18 @@
             theme: {
                 extend: {
                     colors: {
-                        slate: {
-                            850: '#151e2e',
-                            900: '#0f172a',
-                            950: '#020617',
+                        // Custom Neutral Dark Greys (replacing Slate)
+                        neutral: {
+                            850: '#202020', // Custom mid-dark grey
+                            900: '#171717', // True dark grey
+                            950: '#0a0a0a', // Almost black
                         },
-                        fuchsia: {
-                            450: '#e879f9', // Custom bright fuchsia
+                        // Custom Hot Pink / Magenta Accents
+                        pink: {
+                            400: '#ff66c4', // Lighter hot pink
+                            450: '#ff33b5', // Custom vibrant hot pink
+                            500: '#ff00aa', // Main hot pink
+                            600: '#e60099', // Darker hot pink
                         }
                     },
                     animation: {
@@ -51,8 +56,8 @@
     
     <style>
         body {
-            background-color: #0f172a;
-            color: #e2e8f0;
+            background-color: #171717; /* Neutral 900 */
+            color: #e5e5e5; /* Neutral 200 */
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
         /* Custom scrollbar for dark theme */
@@ -61,17 +66,17 @@
             height: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #1e293b; 
+            background: #262626; /* Neutral 800 */
         }
         ::-webkit-scrollbar-thumb {
-            background: #475569; 
+            background: #525252; /* Neutral 600 */
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #64748b; 
+            background: #737373; /* Neutral 500 */
         }
         .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
+            background: rgba(23, 23, 23, 0.7); /* Neutral 900 with opacity */
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -352,58 +357,58 @@
                         {/* Hero Stats */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div className="glass-panel p-4 rounded-xl flex flex-col items-center justify-center text-center">
-                                <div className="text-fuchsia-400 mb-1"><Icon name="zap" /></div>
+                                <div className="text-pink-400 mb-1"><Icon name="zap" /></div>
                                 <div className="text-2xl font-bold">{streak}</div>
-                                <div className="text-xs text-gray-400 uppercase tracking-wider">Day Streak</div>
+                                <div className="text-xs text-neutral-400 uppercase tracking-wider">Day Streak</div>
                             </div>
                             <div className="glass-panel p-4 rounded-xl flex flex-col items-center justify-center text-center">
                                 <div className="text-amber-400 mb-1"><Icon name="medal" /></div>
                                 <div className="text-2xl font-bold">{earnedBadges.length}</div>
-                                <div className="text-xs text-gray-400 uppercase tracking-wider">Badges</div>
+                                <div className="text-xs text-neutral-400 uppercase tracking-wider">Badges</div>
                             </div>
                             <div className="glass-panel p-4 rounded-xl flex flex-col items-center justify-center text-center">
                                 <div className="text-blue-400 mb-1"><Icon name="book" /></div>
                                 <div className="text-2xl font-bold">{books.filter(b => b.status === 'completed').length}</div>
-                                <div className="text-xs text-gray-400 uppercase tracking-wider">Books Read</div>
+                                <div className="text-xs text-neutral-400 uppercase tracking-wider">Books Read</div>
                             </div>
                             <div className="glass-panel p-4 rounded-xl flex flex-col items-center justify-center text-center">
                                 <div className="text-violet-400 mb-1"><Icon name="layers" /></div>
                                 <div className="text-2xl font-bold">{totalPagesRead}</div>
-                                <div className="text-xs text-gray-400 uppercase tracking-wider">Pages Read</div>
+                                <div className="text-xs text-neutral-400 uppercase tracking-wider">Pages Read</div>
                             </div>
                         </div>
 
                         {/* Continue Reading */}
                         <div>
-                            <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><Icon name="bookmark" className="text-fuchsia-400" /> Continue Reading</h2>
+                            <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><Icon name="bookmark" className="text-pink-400" /> Continue Reading</h2>
                             <div className="grid md:grid-cols-2 gap-4">
                                 {activeBooksList.length === 0 ? (
-                                    <div className="col-span-2 p-8 border-2 border-dashed border-gray-700 rounded-xl text-center text-gray-500">
+                                    <div className="col-span-2 p-8 border-2 border-dashed border-neutral-700 rounded-xl text-center text-neutral-500">
                                         No active books. Go to the Library to start one!
                                     </div>
                                 ) : (
                                     activeBooksList.map(book => (
-                                        <div key={book.id} className="glass-panel p-4 rounded-xl flex gap-4 hover:bg-slate-800 transition-colors cursor-pointer group" onClick={() => {
+                                        <div key={book.id} className="glass-panel p-4 rounded-xl flex gap-4 hover:bg-neutral-800 transition-colors cursor-pointer group" onClick={() => {
                                             setActiveBookId(book.id);
                                             setView('log');
                                         }}>
-                                            <div className="w-16 h-24 bg-gray-700 rounded-md flex-shrink-0 overflow-hidden shadow-lg">
+                                            <div className="w-16 h-24 bg-neutral-700 rounded-md flex-shrink-0 overflow-hidden shadow-lg">
                                                 {book.coverUrl ? (
                                                     <img src={book.coverUrl} alt={book.title} className="w-full h-full object-cover" onError={(e) => e.target.style.display='none'} />
                                                 ) : (
-                                                    <div className="w-full h-full flex items-center justify-center text-gray-500"><Icon name="image-off" size={16} /></div>
+                                                    <div className="w-full h-full flex items-center justify-center text-neutral-500"><Icon name="image-off" size={16} /></div>
                                                 )}
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <h3 className="font-bold truncate text-lg group-hover:text-fuchsia-400 transition-colors">{book.title}</h3>
-                                                <p className="text-gray-400 text-sm truncate">{book.author}</p>
+                                                <h3 className="font-bold truncate text-lg group-hover:text-pink-400 transition-colors">{book.title}</h3>
+                                                <p className="text-neutral-400 text-sm truncate">{book.author}</p>
                                                 <div className="mt-3">
-                                                    <div className="flex justify-between text-xs text-gray-500 mb-1">
+                                                    <div className="flex justify-between text-xs text-neutral-500 mb-1">
                                                         <span>Page {book.currentPage} of {book.totalPages}</span>
                                                         <span>{Math.round((book.currentPage / book.totalPages) * 100)}%</span>
                                                     </div>
-                                                    <div className="h-1.5 bg-gray-700 rounded-full overflow-hidden">
-                                                        <div className="h-full bg-fuchsia-500" style={{ width: `${(book.currentPage / book.totalPages) * 100}%` }}></div>
+                                                    <div className="h-1.5 bg-neutral-700 rounded-full overflow-hidden">
+                                                        <div className="h-full bg-pink-500" style={{ width: `${(book.currentPage / book.totalPages) * 100}%` }}></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -417,18 +422,18 @@
                         <div>
                              <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><Icon name="trophy" className="text-amber-400" /> Achievement Collection</h2>
                              {earnedBadges.length === 0 ? (
-                                 <div className="text-gray-500 italic p-4 text-center border border-dashed border-gray-700 rounded-xl mb-6">Start reading to earn your first badge!</div>
+                                 <div className="text-neutral-500 italic p-4 text-center border border-dashed border-neutral-700 rounded-xl mb-6">Start reading to earn your first badge!</div>
                              ) : (
                                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[300px] overflow-y-auto pr-2 mb-6">
                                     {earnedBadges.map((badge, idx) => (
-                                        <div key={badge.id + idx} className="flex items-center gap-4 p-4 rounded-xl border bg-slate-800/50 border-slate-700 hover:border-fuchsia-500/30 transition-all">
-                                            <div className={`p-3 rounded-full flex-shrink-0 ${badge.type === 'dynamic_book' ? 'bg-blue-600 text-white' : badge.type === 'dynamic_goal' ? 'bg-fuchsia-600 text-white' : 'bg-amber-500 text-white'}`}>
+                                        <div key={badge.id + idx} className="flex items-center gap-4 p-4 rounded-xl border bg-neutral-800/50 border-neutral-700 hover:border-pink-500/30 transition-all">
+                                            <div className={`p-3 rounded-full flex-shrink-0 ${badge.type === 'dynamic_book' ? 'bg-blue-600 text-white' : badge.type === 'dynamic_goal' ? 'bg-pink-600 text-white' : 'bg-amber-500 text-white'}`}>
                                                 <Icon name={badge.icon} size={24} />
                                             </div>
                                             <div className="min-w-0">
                                                 <div className="font-bold text-sm text-white truncate">{badge.name}</div>
-                                                <div className="text-xs text-gray-400 leading-tight mt-0.5">{badge.description}</div>
-                                                <div className="text-[10px] uppercase font-bold tracking-wider mt-2 text-slate-500">
+                                                <div className="text-xs text-neutral-400 leading-tight mt-0.5">{badge.description}</div>
+                                                <div className="text-[10px] uppercase font-bold tracking-wider mt-2 text-neutral-500">
                                                     {badge.type === 'static' ? 'Milestone' : badge.type === 'dynamic_book' ? 'Book' : 'Goal'}
                                                 </div>
                                             </div>
@@ -440,7 +445,7 @@
                              {/* Next Milestones (In Progress) */}
                              {inProgressBadges.length > 0 && (
                                 <div>
-                                    <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-3 flex items-center gap-2">
+                                    <h3 className="text-sm font-bold uppercase tracking-wider text-neutral-500 mb-3 flex items-center gap-2">
                                         <Icon name="loader" size={14} /> Next Milestones
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -448,23 +453,23 @@
                                             const percent = Math.min(100, Math.round((badge.current / badge.total) * 100));
                                             return (
                                                 <div key={badge.id} className="glass-panel p-3 rounded-xl flex items-center gap-4 opacity-80 hover:opacity-100 transition-opacity">
-                                                    <div className="p-2 rounded-full bg-slate-800 text-gray-500 grayscale">
+                                                    <div className="p-2 rounded-full bg-neutral-800 text-neutral-500 grayscale">
                                                         <Icon name={badge.icon} size={20} />
                                                     </div>
                                                     <div className="flex-1 min-w-0">
                                                         <div className="flex justify-between items-center mb-1">
-                                                            <div className="font-bold text-sm text-gray-300">{badge.name}</div>
-                                                            <div className="text-xs font-mono text-fuchsia-400">{badge.current} / {badge.total} {badge.unit}</div>
+                                                            <div className="font-bold text-sm text-neutral-300">{badge.name}</div>
+                                                            <div className="text-xs font-mono text-pink-400">{badge.current} / {badge.total} {badge.unit}</div>
                                                         </div>
-                                                        <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                                                            <div className="h-full bg-fuchsia-500/50" style={{ width: `${percent}%` }}></div>
+                                                        <div className="h-1.5 bg-neutral-800 rounded-full overflow-hidden">
+                                                            <div className="h-full bg-pink-500/50" style={{ width: `${percent}%` }}></div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             );
                                         })}
                                         {inProgressBadges.length > 4 && (
-                                            <div className="text-center text-xs text-gray-500 py-2 col-span-full">
+                                            <div className="text-center text-xs text-neutral-500 py-2 col-span-full">
                                                 And {inProgressBadges.length - 4} more locked badges...
                                             </div>
                                         )}
@@ -522,13 +527,13 @@
                     <div className="space-y-6 animate-fade-in">
                         <div className="flex justify-between items-center flex-wrap gap-4">
                             <h2 className="text-2xl font-bold">My Library</h2>
-                            <button onClick={() => setShowAddModal(true)} className="bg-fuchsia-600 hover:bg-fuchsia-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                            <button onClick={() => setShowAddModal(true)} className="bg-pink-600 hover:bg-pink-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
                                 <Icon name="plus" size={18} /> Add Book
                             </button>
                         </div>
 
                         {/* Library Tabs */}
-                        <div className="flex gap-1 bg-slate-800/50 p-1 rounded-xl overflow-x-auto">
+                        <div className="flex gap-1 bg-neutral-800/50 p-1 rounded-xl overflow-x-auto">
                             {[
                                 { id: 'reading', label: 'Current', icon: 'book-open' },
                                 { id: 'tbr', label: 'Want to Read', icon: 'list' },
@@ -538,7 +543,7 @@
                                 <button 
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${activeTab === tab.id ? 'bg-fuchsia-600 text-white shadow-lg' : 'text-gray-400 hover:text-white hover:bg-slate-700'}`}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${activeTab === tab.id ? 'bg-pink-600 text-white shadow-lg' : 'text-neutral-400 hover:text-white hover:bg-neutral-700'}`}
                                 >
                                     <Icon name={tab.icon} size={16} />
                                     {tab.label}
@@ -552,26 +557,26 @@
                         {/* Add Book Modal */}
                         {showAddModal && (
                             <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                                <div className="bg-slate-900 border border-slate-700 p-6 rounded-2xl w-full max-w-md shadow-2xl animate-fade-in">
+                                <div className="bg-neutral-900 border border-neutral-700 p-6 rounded-2xl w-full max-w-md shadow-2xl animate-fade-in">
                                     <h3 className="text-xl font-bold mb-4">Register New Book</h3>
                                     <form onSubmit={handleAddBook} className="space-y-4">
                                         <div>
-                                            <label className="block text-sm text-gray-400 mb-1">Book Title</label>
-                                            <input autoFocus type="text" className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 focus:outline-none focus:border-fuchsia-500 transition-colors" placeholder="e.g. Dune" value={newBook.title} onChange={e => setNewBook({...newBook, title: e.target.value})} required />
+                                            <label className="block text-sm text-neutral-400 mb-1">Book Title</label>
+                                            <input autoFocus type="text" className="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-3 focus:outline-none focus:border-pink-500 transition-colors" placeholder="e.g. Dune" value={newBook.title} onChange={e => setNewBook({...newBook, title: e.target.value})} required />
                                         </div>
                                         <div>
-                                            <label className="block text-sm text-gray-400 mb-1">Author</label>
-                                            <input type="text" className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 focus:outline-none focus:border-fuchsia-500 transition-colors" placeholder="e.g. Frank Herbert" value={newBook.author} onChange={e => setNewBook({...newBook, author: e.target.value})} />
+                                            <label className="block text-sm text-neutral-400 mb-1">Author</label>
+                                            <input type="text" className="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-3 focus:outline-none focus:border-pink-500 transition-colors" placeholder="e.g. Frank Herbert" value={newBook.author} onChange={e => setNewBook({...newBook, author: e.target.value})} />
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>
-                                                <label className="block text-sm text-gray-400 mb-1">Total Pages</label>
-                                                <input type="number" className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 focus:outline-none focus:border-fuchsia-500 transition-colors" placeholder="0" value={newBook.totalPages} onChange={e => setNewBook({...newBook, totalPages: e.target.value})} required />
+                                                <label className="block text-sm text-neutral-400 mb-1">Total Pages</label>
+                                                <input type="number" className="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-3 focus:outline-none focus:border-pink-500 transition-colors" placeholder="0" value={newBook.totalPages} onChange={e => setNewBook({...newBook, totalPages: e.target.value})} required />
                                             </div>
                                             <div>
-                                                <label className="block text-sm text-gray-400 mb-1">Initial Shelf</label>
+                                                <label className="block text-sm text-neutral-400 mb-1">Initial Shelf</label>
                                                 <select 
-                                                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 focus:outline-none focus:border-fuchsia-500 transition-colors appearance-none"
+                                                    className="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-3 focus:outline-none focus:border-pink-500 transition-colors appearance-none"
                                                     value={newBook.status}
                                                     onChange={e => setNewBook({...newBook, status: e.target.value})}
                                                 >
@@ -582,12 +587,12 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <label className="block text-sm text-gray-400 mb-1">Cover Image URL</label>
-                                            <input type="url" className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 focus:outline-none focus:border-fuchsia-500 transition-colors" placeholder="https://..." value={newBook.coverUrl} onChange={e => setNewBook({...newBook, coverUrl: e.target.value})} />
+                                            <label className="block text-sm text-neutral-400 mb-1">Cover Image URL</label>
+                                            <input type="url" className="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-3 focus:outline-none focus:border-pink-500 transition-colors" placeholder="https://..." value={newBook.coverUrl} onChange={e => setNewBook({...newBook, coverUrl: e.target.value})} />
                                         </div>
                                         <div className="flex gap-3 pt-2">
-                                            <button type="button" onClick={() => setShowAddModal(false)} className="flex-1 bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-lg transition-colors">Cancel</button>
-                                            <button type="submit" className="flex-1 bg-fuchsia-600 hover:bg-fuchsia-500 text-white py-3 rounded-lg font-bold transition-colors">Add Book</button>
+                                            <button type="button" onClick={() => setShowAddModal(false)} className="flex-1 bg-neutral-800 hover:bg-neutral-700 text-white py-3 rounded-lg transition-colors">Cancel</button>
+                                            <button type="submit" className="flex-1 bg-pink-600 hover:bg-pink-500 text-white py-3 rounded-lg font-bold transition-colors">Add Book</button>
                                         </div>
                                     </form>
                                 </div>
@@ -596,16 +601,16 @@
 
                         {/* Book Grid */}
                         {filteredBooks.length === 0 ? (
-                            <div className="text-center py-16 border-2 border-dashed border-slate-800 rounded-2xl">
-                                <div className="inline-block p-4 rounded-full bg-slate-800 mb-4">
+                            <div className="text-center py-16 border-2 border-dashed border-neutral-800 rounded-2xl">
+                                <div className="inline-block p-4 rounded-full bg-neutral-800 mb-4">
                                     <Icon name={
                                         activeTab === 'reading' ? 'book-open' :
                                         activeTab === 'tbr' ? 'list' :
                                         activeTab === 'completed' ? 'check-circle' : 'ghost'
-                                    } size={32} className="text-gray-500" />
+                                    } size={32} className="text-neutral-500" />
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-400">This shelf is empty</h3>
-                                <p className="text-gray-600 mt-2">No books found in '{activeTab === 'tbr' ? 'Want to Read' : activeTab === 'dnf' ? 'Dropped' : activeTab}'.</p>
+                                <h3 className="text-xl font-bold text-neutral-400">This shelf is empty</h3>
+                                <p className="text-neutral-600 mt-2">No books found in '{activeTab === 'tbr' ? 'Want to Read' : activeTab === 'dnf' ? 'Dropped' : activeTab}'.</p>
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -631,11 +636,11 @@
                                         }}
                                         className="group relative flex flex-col gap-2 cursor-pointer"
                                     >
-                                        <div className="aspect-[2/3] bg-slate-800 rounded-xl overflow-hidden shadow-lg border border-slate-700/50 group-hover:border-fuchsia-500/50 transition-all duration-300 transform group-hover:-translate-y-1 relative">
+                                        <div className="aspect-[2/3] bg-neutral-800 rounded-xl overflow-hidden shadow-lg border border-neutral-700/50 group-hover:border-pink-500/50 transition-all duration-300 transform group-hover:-translate-y-1 relative">
                                             {book.coverUrl ? (
                                                 <img src={book.coverUrl} alt={book.title} className={`w-full h-full object-cover transition-opacity ${book.status === 'dnf' ? 'opacity-40 grayscale' : ''}`} />
                                             ) : (
-                                                <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center text-slate-600">
+                                                <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center text-neutral-600">
                                                     <Icon name="book-open" size={48} className="mb-2 opacity-50" />
                                                     <span className="text-xs font-bold">{book.title}</span>
                                                 </div>
@@ -644,30 +649,30 @@
                                             {/* Status Badge Overlays */}
                                             {book.status === 'tbr' && (
                                                 <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <div className="bg-fuchsia-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                                                    <div className="bg-pink-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform">
                                                         <Icon name="play" size={12} fill="currentColor" /> Start Reading
                                                     </div>
                                                 </div>
                                             )}
                                              {book.status === 'dnf' && (
                                                 <div className="absolute inset-0 flex items-center justify-center">
-                                                    <div className="bg-slate-800/80 text-gray-400 px-3 py-1 rounded-full text-xs font-bold border border-slate-600">Dropped</div>
+                                                    <div className="bg-neutral-800/80 text-neutral-400 px-3 py-1 rounded-full text-xs font-bold border border-neutral-600">Dropped</div>
                                                 </div>
                                             )}
 
                                             {/* Progress Overlay (Only for Reading/Completed) */}
                                             {(book.status === 'reading' || book.status === 'completed') && (
-                                                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/90 to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                                                    <div className="text-xs text-fuchsia-400 font-bold mb-1">{Math.round((book.currentPage / book.totalPages) * 100)}% Complete</div>
-                                                    <div className="h-1 bg-slate-700 rounded-full">
-                                                        <div className="h-full bg-fuchsia-500 rounded-full" style={{ width: `${(book.currentPage / book.totalPages) * 100}%` }}></div>
+                                                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-neutral-950/90 to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                                                    <div className="text-xs text-pink-400 font-bold mb-1">{Math.round((book.currentPage / book.totalPages) * 100)}% Complete</div>
+                                                    <div className="h-1 bg-neutral-700 rounded-full">
+                                                        <div className="h-full bg-pink-500 rounded-full" style={{ width: `${(book.currentPage / book.totalPages) * 100}%` }}></div>
                                                     </div>
                                                 </div>
                                             )}
                                         </div>
                                         <div>
-                                            <h3 className={`font-bold text-sm truncate transition-colors ${book.status === 'dnf' ? 'text-gray-500 line-through' : 'group-hover:text-fuchsia-400'}`}>{book.title}</h3>
-                                            <p className="text-xs text-gray-400 truncate">{book.author}</p>
+                                            <h3 className={`font-bold text-sm truncate transition-colors ${book.status === 'dnf' ? 'text-neutral-500 line-through' : 'group-hover:text-pink-400'}`}>{book.title}</h3>
+                                            <p className="text-xs text-neutral-400 truncate">{book.author}</p>
                                         </div>
                                         
                                         {/* Quick Actions */}
@@ -678,7 +683,7 @@
                                                     if(confirm(`Move "${book.title}" to Dropped?`)) {
                                                         changeBookStatus(book.id, 'dnf');
                                                     }
-                                                }} className="bg-slate-900/80 p-1.5 rounded-full hover:bg-slate-700 transition-colors text-gray-400 hover:text-white" title="Drop Book">
+                                                }} className="bg-neutral-900/80 p-1.5 rounded-full hover:bg-neutral-700 transition-colors text-neutral-400 hover:text-white" title="Drop Book">
                                                     <Icon name="x" size={14} />
                                                 </button>
                                             )}
@@ -866,41 +871,41 @@
                         
                         {/* Selected Book Header with Cover & Progress */}
                         {selectedBook ? (
-                            <div className="glass-panel p-6 rounded-2xl border border-fuchsia-500/20 shadow-lg relative overflow-hidden flex flex-col md:flex-row gap-6 items-center md:items-start">
+                            <div className="glass-panel p-6 rounded-2xl border border-pink-500/20 shadow-lg relative overflow-hidden flex flex-col md:flex-row gap-6 items-center md:items-start">
                                 {/* Thumbnail */}
-                                <div className="w-24 h-36 flex-shrink-0 bg-slate-800 rounded-lg shadow-xl overflow-hidden border border-slate-700">
+                                <div className="w-24 h-36 flex-shrink-0 bg-neutral-800 rounded-lg shadow-xl overflow-hidden border border-neutral-700">
                                     {selectedBook.coverUrl ? (
                                         <img src={selectedBook.coverUrl} alt={selectedBook.title} className="w-full h-full object-cover" />
                                     ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-slate-600"><Icon name="book" /></div>
+                                        <div className="w-full h-full flex items-center justify-center text-neutral-600"><Icon name="book" /></div>
                                     )}
                                 </div>
 
                                 <div className="flex-1 w-full relative z-10">
                                     <h2 className="text-2xl font-bold mb-1">{selectedBook.title}</h2>
-                                    <p className="text-gray-400 text-sm mb-4">{selectedBook.author}</p>
+                                    <p className="text-neutral-400 text-sm mb-4">{selectedBook.author}</p>
                                     
                                     <div className="flex justify-between items-end mb-2">
-                                        <div className="text-sm font-bold text-fuchsia-400">
-                                            Page {selectedBook.currentPage} <span className="text-gray-500">of {selectedBook.totalPages}</span>
+                                        <div className="text-sm font-bold text-pink-400">
+                                            Page {selectedBook.currentPage} <span className="text-neutral-500">of {selectedBook.totalPages}</span>
                                         </div>
                                         <div className="text-xl font-bold text-white">
                                             {Math.round((selectedBook.currentPage / selectedBook.totalPages) * 100)}%
                                         </div>
                                     </div>
-                                    <div className="h-3 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
-                                        <div className="h-full bg-gradient-to-r from-fuchsia-600 to-violet-400 transition-all duration-700 ease-out" style={{ width: `${(selectedBook.currentPage / selectedBook.totalPages) * 100}%` }}></div>
+                                    <div className="h-3 bg-neutral-800 rounded-full overflow-hidden border border-neutral-700">
+                                        <div className="h-full bg-gradient-to-r from-pink-600 to-violet-400 transition-all duration-700 ease-out" style={{ width: `${(selectedBook.currentPage / selectedBook.totalPages) * 100}%` }}></div>
                                     </div>
                                 </div>
                             </div>
                         ) : (
                              <div className="text-center mb-8">
                                 <h2 className="text-3xl font-bold mb-2">Reading Session</h2>
-                                <p className="text-gray-400">Select a book to start logging.</p>
+                                <p className="text-neutral-400">Select a book to start logging.</p>
                             </div>
                         )}
 
-                        <div className={`glass-panel p-6 rounded-2xl border shadow-2xl transition-colors ${editingLogId ? 'border-amber-500/30 bg-amber-900/10' : 'border-slate-700'}`}>
+                        <div className={`glass-panel p-6 rounded-2xl border shadow-2xl transition-colors ${editingLogId ? 'border-amber-500/30 bg-amber-900/10' : 'border-neutral-700'}`}>
                             {editingLogId && (
                                 <div className="mb-4 flex items-center gap-2 text-amber-400 font-bold text-sm uppercase tracking-wide">
                                     <Icon name="edit-2" size={14} />
@@ -910,9 +915,9 @@
                             <form onSubmit={handleSaveLog} className="space-y-6">
                                 {/* Book Selector */}
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-2 uppercase tracking-wide font-bold">Select Book</label>
+                                    <label className="block text-sm text-neutral-400 mb-2 uppercase tracking-wide font-bold">Select Book</label>
                                     <select 
-                                        className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 focus:border-fuchsia-500 focus:outline-none transition-colors appearance-none disabled:opacity-50"
+                                        className="w-full bg-neutral-900 border border-neutral-700 rounded-xl p-4 focus:border-pink-500 focus:outline-none transition-colors appearance-none disabled:opacity-50"
                                         value={activeBookId}
                                         onChange={e => {
                                             setActiveBookId(e.target.value);
@@ -933,20 +938,20 @@
                                 {/* Date & Duration & End Page */}
                                 <div className="grid grid-cols-2 gap-4">
                                      <div>
-                                         <label className="block text-sm text-gray-400 mb-2 uppercase tracking-wide font-bold">Date</label>
+                                         <label className="block text-sm text-neutral-400 mb-2 uppercase tracking-wide font-bold">Date</label>
                                          <input 
                                             type="date"
-                                            className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 focus:border-fuchsia-500 focus:outline-none [color-scheme:dark]" 
+                                            className="w-full bg-neutral-900 border border-neutral-700 rounded-xl p-4 focus:border-pink-500 focus:outline-none [color-scheme:dark]" 
                                             value={logDate}
                                             onChange={e => setLogDate(e.target.value)}
                                             required
                                         />
                                     </div>
                                     <div>
-                                         <label className="block text-sm text-gray-400 mb-2 uppercase tracking-wide font-bold">Minutes Read</label>
+                                         <label className="block text-sm text-neutral-400 mb-2 uppercase tracking-wide font-bold">Minutes Read</label>
                                          <input 
                                             type="number"
-                                            className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 focus:border-fuchsia-500 focus:outline-none" 
+                                            className="w-full bg-neutral-900 border border-neutral-700 rounded-xl p-4 focus:border-pink-500 focus:outline-none" 
                                             placeholder="e.g. 30"
                                             value={manualDuration}
                                             onChange={e => setManualDuration(e.target.value)}
@@ -955,11 +960,11 @@
                                         />
                                     </div>
                                     <div className="col-span-2">
-                                         <label className="block text-sm text-gray-400 mb-2 uppercase tracking-wide font-bold">Ended on Page</label>
+                                         <label className="block text-sm text-neutral-400 mb-2 uppercase tracking-wide font-bold">Ended on Page</label>
                                          <div className="relative">
                                              <input 
                                                 type="number" 
-                                                className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 pl-4 focus:border-fuchsia-500 focus:outline-none text-2xl font-bold" 
+                                                className="w-full bg-neutral-900 border border-neutral-700 rounded-xl p-4 pl-4 focus:border-pink-500 focus:outline-none text-2xl font-bold" 
                                                 value={endPage}
                                                 onChange={e => setEndPage(e.target.value)}
                                                 placeholder={selectedBook ? selectedBook.currentPage : '0'}
@@ -967,7 +972,7 @@
                                                 required
                                             />
                                             {selectedBook && (
-                                                <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm">
+                                                <div className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 text-sm">
                                                     / {selectedBook.totalPages}
                                                 </div>
                                             )}
@@ -977,9 +982,9 @@
 
                                 {/* Notes */}
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-2 uppercase tracking-wide font-bold">Insights & Thoughts</label>
+                                    <label className="block text-sm text-neutral-400 mb-2 uppercase tracking-wide font-bold">Insights & Thoughts</label>
                                     <textarea 
-                                        className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 focus:border-fuchsia-500 focus:outline-none min-h-[100px] leading-relaxed"
+                                        className="w-full bg-neutral-900 border border-neutral-700 rounded-xl p-4 focus:border-pink-500 focus:outline-none min-h-[100px] leading-relaxed"
                                         placeholder="What inspired you? Write down quotes or ideas..."
                                         value={notes}
                                         onChange={e => setNotes(e.target.value)}
@@ -988,11 +993,11 @@
 
                                 <div className="flex gap-3">
                                     {editingLogId && (
-                                        <button type="button" onClick={handleCancelEdit} className="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold py-4 rounded-xl transition-colors">
+                                        <button type="button" onClick={handleCancelEdit} className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-white font-bold py-4 rounded-xl transition-colors">
                                             Cancel
                                         </button>
                                     )}
-                                    <button type="submit" className={`flex-1 font-bold py-4 rounded-xl shadow-lg transform hover:scale-[1.02] transition-all flex items-center justify-center gap-2 ${editingLogId ? 'bg-amber-600 hover:bg-amber-500 text-white shadow-amber-900/50' : 'bg-gradient-to-r from-fuchsia-600 to-violet-600 hover:from-fuchsia-500 hover:to-violet-500 text-white shadow-fuchsia-900/50'}`}>
+                                    <button type="submit" className={`flex-1 font-bold py-4 rounded-xl shadow-lg transform hover:scale-[1.02] transition-all flex items-center justify-center gap-2 ${editingLogId ? 'bg-amber-600 hover:bg-amber-500 text-white shadow-amber-900/50' : 'bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-500 hover:to-violet-500 text-white shadow-pink-900/50'}`}>
                                         <Icon name={editingLogId ? "check" : "save"} /> 
                                         {editingLogId ? "Update Entry" : "Save Log"}
                                     </button>
@@ -1004,29 +1009,29 @@
                         {activeBookId && (
                             <div className="mt-8">
                                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                                    <Icon name="history" className="text-fuchsia-400" />
+                                    <Icon name="history" className="text-pink-400" />
                                     Session History
                                 </h3>
                                 <div className="space-y-4">
                                     {bookLogs.length === 0 && (
-                                        <div className="text-gray-500 text-center py-8 border-2 border-dashed border-gray-800 rounded-xl">
+                                        <div className="text-neutral-500 text-center py-8 border-2 border-dashed border-neutral-800 rounded-xl">
                                             No logs for this book yet.
                                         </div>
                                     )}
                                     {bookLogs.map(log => (
-                                        <div key={log.id} className={`p-5 rounded-xl border flex flex-col gap-3 transition-colors ${editingLogId === log.id ? 'bg-amber-900/20 border-amber-500/50' : 'bg-slate-800/80 border-slate-700 hover:border-fuchsia-500/30'}`}>
-                                            <div className="flex justify-between items-center pb-2 border-b border-slate-700/50">
-                                                <div className="flex items-center gap-2 text-fuchsia-400 font-bold">
+                                        <div key={log.id} className={`p-5 rounded-xl border flex flex-col gap-3 transition-colors ${editingLogId === log.id ? 'bg-amber-900/20 border-amber-500/50' : 'bg-neutral-800/80 border-neutral-700 hover:border-pink-500/30'}`}>
+                                            <div className="flex justify-between items-center pb-2 border-b border-neutral-700/50">
+                                                <div className="flex items-center gap-2 text-pink-400 font-bold">
                                                     <Icon name="calendar" size={16} />
                                                     {log.date}
                                                 </div>
                                                 <div className="flex items-center gap-2">
-                                                    <span className="text-sm text-gray-400">{log.duration} mins</span>
-                                                    <div className="flex gap-1 ml-2 pl-2 border-l border-slate-700">
-                                                        <button onClick={() => handleEditClick(log)} className="p-1.5 hover:bg-slate-700 rounded text-gray-400 hover:text-white transition-colors" title="Edit">
+                                                    <span className="text-sm text-neutral-400">{log.duration} mins</span>
+                                                    <div className="flex gap-1 ml-2 pl-2 border-l border-neutral-700">
+                                                        <button onClick={() => handleEditClick(log)} className="p-1.5 hover:bg-neutral-700 rounded text-neutral-400 hover:text-white transition-colors" title="Edit">
                                                             <Icon name="edit-2" size={14} />
                                                         </button>
-                                                        <button onClick={() => handleDeleteClick(log.id)} className="p-1.5 hover:bg-red-900/50 rounded text-gray-400 hover:text-red-400 transition-colors" title="Delete">
+                                                        <button onClick={() => handleDeleteClick(log.id)} className="p-1.5 hover:bg-red-900/50 rounded text-neutral-400 hover:text-red-400 transition-colors" title="Delete">
                                                             <Icon name="trash-2" size={14} />
                                                         </button>
                                                     </div>
@@ -1034,12 +1039,12 @@
                                             </div>
                                             <div className="flex justify-between items-center">
                                                 <div className="text-sm">
-                                                    <span className="text-gray-400">Pages:</span> <span className="font-mono text-white">{log.startPage} → {log.endPage}</span>
-                                                    <span className="text-fuchsia-500 font-bold ml-2">({log.pagesRead} read)</span>
+                                                    <span className="text-neutral-400">Pages:</span> <span className="font-mono text-white">{log.startPage} → {log.endPage}</span>
+                                                    <span className="text-pink-500 font-bold ml-2">({log.pagesRead} read)</span>
                                                 </div>
                                             </div>
                                             {log.notes && (
-                                                <div className="text-sm text-gray-300 italic bg-slate-900/50 p-3 rounded-lg border-l-2 border-fuchsia-500/50 mt-1">
+                                                <div className="text-sm text-neutral-300 italic bg-neutral-900/50 p-3 rounded-lg border-l-2 border-pink-500/50 mt-1">
                                                     "{log.notes}"
                                                 </div>
                                             )}
@@ -1104,12 +1109,12 @@
                 if (logs.length === 0) {
                      return (
                         <div className="space-y-8 animate-fade-in flex flex-col items-center justify-center min-h-[300px] text-center">
-                            <div className="bg-slate-800 p-6 rounded-full mb-4">
-                                <Icon name="bar-chart-2" size={48} className="text-slate-600" />
+                            <div className="bg-neutral-800 p-6 rounded-full mb-4">
+                                <Icon name="bar-chart-2" size={48} className="text-neutral-600" />
                             </div>
                             <h2 className="text-2xl font-bold">Chronicles</h2>
-                            <p className="text-gray-400 max-w-md">No reading data yet. Log your first session to unlock charts and analytics!</p>
-                            <button onClick={() => setView('library')} className="bg-fuchsia-600 hover:bg-fuchsia-500 text-white px-6 py-3 rounded-lg font-bold transition-colors mt-4">
+                            <p className="text-neutral-400 max-w-md">No reading data yet. Log your first session to unlock charts and analytics!</p>
+                            <button onClick={() => setView('library')} className="bg-pink-600 hover:bg-pink-500 text-white px-6 py-3 rounded-lg font-bold transition-colors mt-4">
                                 Start Reading
                             </button>
                         </div>
@@ -1120,7 +1125,7 @@
                     <div className="space-y-8 animate-fade-in">
                         <div className="flex justify-between items-center">
                             <h2 className="text-2xl font-bold">Chronicles</h2>
-                            <div className="text-xs font-mono text-fuchsia-400 bg-fuchsia-900/30 px-3 py-1 rounded-full border border-fuchsia-500/20">
+                            <div className="text-xs font-mono text-pink-400 bg-pink-900/30 px-3 py-1 rounded-full border border-pink-500/20">
                                 {currentYear} Archives
                             </div>
                         </div>
@@ -1132,38 +1137,38 @@
                             </div>
                             <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><Icon name="flag" className="text-amber-400" /> {currentYear} Recap</h3>
                             <div className="grid grid-cols-3 gap-4">
-                                <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 text-center">
+                                <div className="bg-neutral-800/50 p-4 rounded-xl border border-neutral-700 text-center">
                                     <div className="text-2xl font-bold text-white">{finishedBooksCount}</div>
-                                    <div className="text-[10px] uppercase tracking-wider text-gray-400">Books Completed</div>
+                                    <div className="text-[10px] uppercase tracking-wider text-neutral-400">Books Completed</div>
                                 </div>
-                                <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 text-center">
-                                    <div className="text-2xl font-bold text-fuchsia-400">{totalYearPages.toLocaleString()}</div>
-                                    <div className="text-[10px] uppercase tracking-wider text-gray-400">Pages Read</div>
+                                <div className="bg-neutral-800/50 p-4 rounded-xl border border-neutral-700 text-center">
+                                    <div className="text-2xl font-bold text-pink-400">{totalYearPages.toLocaleString()}</div>
+                                    <div className="text-[10px] uppercase tracking-wider text-neutral-400">Pages Read</div>
                                 </div>
-                                <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 text-center">
+                                <div className="bg-neutral-800/50 p-4 rounded-xl border border-neutral-700 text-center">
                                     <div className="text-2xl font-bold text-blue-400">{totalYearHours}</div>
-                                    <div className="text-[10px] uppercase tracking-wider text-gray-400">Hours Logged</div>
+                                    <div className="text-[10px] uppercase tracking-wider text-neutral-400">Hours Logged</div>
                                 </div>
                             </div>
                         </div>
 
                         {/* Weekly Chart */}
                         <div className="glass-panel p-6 rounded-2xl">
-                            <h3 className="text-lg font-bold mb-6 flex items-center gap-2"><Icon name="bar-chart-2" className="text-fuchsia-400" /> Past 7 Days Activity</h3>
+                            <h3 className="text-lg font-bold mb-6 flex items-center gap-2"><Icon name="bar-chart-2" className="text-pink-400" /> Past 7 Days Activity</h3>
                             <div className="flex justify-between h-48 gap-2">
                                 {weekData.map(day => (
                                     <div key={day.date} className="flex-1 flex flex-col items-center gap-2 group relative justify-end">
                                         {/* Tooltip */}
-                                        <div className="absolute bottom-full mb-2 bg-slate-800 text-xs p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10 border border-slate-600">
+                                        <div className="absolute bottom-full mb-2 bg-neutral-800 text-xs p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10 border border-neutral-600">
                                             {day.pages} pages, {day.minutes} mins
                                         </div>
-                                        <div className="w-full bg-slate-800 rounded-t-lg relative overflow-hidden flex-1">
+                                        <div className="w-full bg-neutral-800 rounded-t-lg relative overflow-hidden flex-1">
                                             <div 
-                                                className="absolute bottom-0 w-full bg-fuchsia-500 hover:bg-fuchsia-400 transition-all duration-500 rounded-t-lg"
+                                                className="absolute bottom-0 w-full bg-pink-500 hover:bg-pink-400 transition-all duration-500 rounded-t-lg"
                                                 style={{ height: `${(day.pages / maxPages) * 100}%` }}
                                             ></div>
                                         </div>
-                                        <div className="text-xs text-gray-500 font-mono">{day.date.slice(5)}</div>
+                                        <div className="text-xs text-neutral-500 font-mono">{day.date.slice(5)}</div>
                                     </div>
                                 ))}
                             </div>
@@ -1175,13 +1180,13 @@
                             <div className="flex justify-between h-32 gap-1">
                                 {monthData.map(m => (
                                     <div key={m.name} className="flex-1 flex flex-col items-center gap-2 group relative justify-end">
-                                        <div className="w-full bg-slate-800 rounded-t-sm relative overflow-hidden flex-1">
+                                        <div className="w-full bg-neutral-800 rounded-t-sm relative overflow-hidden flex-1">
                                              <div 
                                                 className="absolute bottom-0 w-full bg-blue-500/80 hover:bg-blue-400 transition-all duration-500"
                                                 style={{ height: `${(m.pages / maxMonthPages) * 100}%` }}
                                             ></div>
                                         </div>
-                                        <div className="text-[10px] text-gray-500 uppercase">{m.name}</div>
+                                        <div className="text-[10px] text-neutral-500 uppercase">{m.name}</div>
                                     </div>
                                 ))}
                             </div>
@@ -1192,18 +1197,18 @@
                             <h3 className="text-lg font-bold mb-4">Reading History</h3>
                             <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
                                 {logs.map(log => (
-                                    <div key={log.id} className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 flex flex-col gap-2">
+                                    <div key={log.id} className="bg-neutral-800/50 p-4 rounded-xl border border-neutral-700/50 flex flex-col gap-2">
                                         <div className="flex justify-between items-start">
                                             <div>
-                                                <div className="font-bold text-fuchsia-400">{log.bookTitle}</div>
-                                                <div className="text-xs text-gray-500">{log.date} • {log.duration} mins</div>
+                                                <div className="font-bold text-pink-400">{log.bookTitle}</div>
+                                                <div className="text-xs text-neutral-500">{log.date} • {log.duration} mins</div>
                                             </div>
                                             <div className="text-right">
                                                 <div className="font-bold text-white">+{log.pagesRead} pgs</div>
                                             </div>
                                         </div>
                                         {log.notes && (
-                                            <div className="text-sm text-gray-300 italic bg-slate-900/50 p-3 rounded-lg mt-2 border-l-2 border-fuchsia-500/50">
+                                            <div className="text-sm text-neutral-300 italic bg-neutral-900/50 p-3 rounded-lg mt-2 border-l-2 border-pink-500/50">
                                                 "{log.notes}"
                                             </div>
                                         )}
@@ -1231,7 +1236,7 @@
                         <div className="flex justify-between items-center">
                             <h2 className="text-2xl font-bold">Insights & Reflections</h2>
                             <select 
-                                className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm focus:border-fuchsia-500 outline-none"
+                                className="bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-sm focus:border-pink-500 outline-none"
                                 value={filterBookId}
                                 onChange={(e) => setFilterBookId(e.target.value)}
                             >
@@ -1244,7 +1249,7 @@
                         </div>
 
                         {filteredInsights.length === 0 ? (
-                            <div className="text-center p-12 border-2 border-dashed border-slate-700 rounded-2xl text-slate-500">
+                            <div className="text-center p-12 border-2 border-dashed border-neutral-700 rounded-2xl text-neutral-500">
                                 <Icon name="pen-tool" size={48} className="mx-auto mb-4 opacity-50" />
                                 <p>No insights recorded yet. Add notes to your reading logs to see them here.</p>
                             </div>
@@ -1253,18 +1258,18 @@
                                 {filteredInsights.map(log => {
                                     const book = books.find(b => b.id === log.bookId);
                                     return (
-                                        <div key={log.id} className="break-inside-avoid bg-slate-800/50 p-6 rounded-xl border border-slate-700 hover:border-fuchsia-500/30 transition-colors shadow-lg">
+                                        <div key={log.id} className="break-inside-avoid bg-neutral-800/50 p-6 rounded-xl border border-neutral-700 hover:border-pink-500/30 transition-colors shadow-lg">
                                             <div className="mb-4">
-                                                <Icon name="quote" size={24} className="text-fuchsia-500/50 mb-2" />
-                                                <p className="text-lg text-gray-200 leading-relaxed font-serif italic">"{log.notes}"</p>
+                                                <Icon name="quote" size={24} className="text-pink-500/50 mb-2" />
+                                                <p className="text-lg text-neutral-200 leading-relaxed font-serif italic">"{log.notes}"</p>
                                             </div>
-                                            <div className="flex items-center gap-3 pt-4 border-t border-slate-700/50 mt-4">
-                                                <div className="w-10 h-14 bg-slate-700 rounded flex-shrink-0 overflow-hidden">
+                                            <div className="flex items-center gap-3 pt-4 border-t border-neutral-700/50 mt-4">
+                                                <div className="w-10 h-14 bg-neutral-700 rounded flex-shrink-0 overflow-hidden">
                                                     {book?.coverUrl && <img src={book.coverUrl} className="w-full h-full object-cover" />}
                                                 </div>
                                                 <div className="min-w-0">
-                                                    <div className="font-bold text-sm text-fuchsia-400 truncate">{log.bookTitle}</div>
-                                                    <div className="text-xs text-gray-500 flex items-center gap-2">
+                                                    <div className="font-bold text-sm text-pink-400 truncate">{log.bookTitle}</div>
+                                                    <div className="text-xs text-neutral-500 flex items-center gap-2">
                                                         <span>{log.date}</span>
                                                         <span>•</span>
                                                         <span>Page {log.endPage}</span>
@@ -1324,7 +1329,7 @@
                         <div className="glass-panel p-6 rounded-2xl space-y-4">
                             <h3 className="font-bold text-lg">Goal Settings</h3>
                             <div>
-                                <label className="block text-sm text-gray-400 mb-2">Weekly Reading Goal (Hours)</label>
+                                <label className="block text-sm text-neutral-400 mb-2">Weekly Reading Goal (Hours)</label>
                                 <div className="flex items-center gap-4">
                                     <input 
                                         type="range" 
@@ -1332,24 +1337,24 @@
                                         max="20" 
                                         value={weeklyGoalHours} 
                                         onChange={(e) => setWeeklyGoalHours(parseInt(e.target.value))}
-                                        className="w-full accent-fuchsia-500"
+                                        className="w-full accent-pink-500"
                                     />
-                                    <span className="font-bold text-fuchsia-400 w-12 text-center">{weeklyGoalHours}h</span>
+                                    <span className="font-bold text-pink-400 w-12 text-center">{weeklyGoalHours}h</span>
                                 </div>
-                                <p className="text-xs text-gray-500 mt-2">Earn a "Weekly Warrior" badge for every week you meet this goal.</p>
+                                <p className="text-xs text-neutral-500 mt-2">Earn a "Weekly Warrior" badge for every week you meet this goal.</p>
                             </div>
                         </div>
                         
                         <div className="glass-panel p-6 rounded-2xl space-y-4">
                             <h3 className="font-bold text-lg">Data Management</h3>
-                            <p className="text-sm text-gray-400">Export your data to backup or transfer to another device.</p>
+                            <p className="text-sm text-neutral-400">Export your data to backup or transfer to another device.</p>
                             
                             <div className="grid grid-cols-2 gap-4">
-                                <button onClick={exportData} className="bg-slate-700 hover:bg-slate-600 text-white p-4 rounded-xl flex flex-col items-center gap-2 transition-colors">
+                                <button onClick={exportData} className="bg-neutral-700 hover:bg-neutral-600 text-white p-4 rounded-xl flex flex-col items-center gap-2 transition-colors">
                                     <Icon name="download" />
                                     <span>Export JSON</span>
                                 </button>
-                                <button onClick={() => fileInputRef.current.click()} className="bg-slate-700 hover:bg-slate-600 text-white p-4 rounded-xl flex flex-col items-center gap-2 transition-colors">
+                                <button onClick={() => fileInputRef.current.click()} className="bg-neutral-700 hover:bg-neutral-600 text-white p-4 rounded-xl flex flex-col items-center gap-2 transition-colors">
                                     <Icon name="upload" />
                                     <span>Import JSON</span>
                                 </button>
@@ -1376,7 +1381,7 @@
             const NavItem = ({ id, icon, label }) => (
                 <button 
                     onClick={() => setView(id)}
-                    className={`flex flex-col items-center gap-1 p-2 flex-1 rounded-xl transition-all duration-200 ${view === id ? 'text-fuchsia-400 bg-fuchsia-400/10' : 'text-gray-500 hover:text-gray-300'}`}
+                    className={`flex flex-col items-center gap-1 p-2 flex-1 rounded-xl transition-all duration-200 ${view === id ? 'text-pink-400 bg-pink-400/10' : 'text-neutral-500 hover:text-neutral-300'}`}
                 >
                     <Icon name={icon} size={24} className={view === id ? 'stroke-2' : 'stroke-1.5'} />
                     <span className="text-[10px] font-medium uppercase tracking-wider">{label}</span>
@@ -1386,8 +1391,8 @@
             return (
                 <div className="min-h-screen pb-24 md:pb-0 md:pl-24">
                     {/* Desktop Side Nav */}
-                    <nav className="hidden md:flex fixed left-0 top-0 bottom-0 w-24 bg-slate-900 border-r border-slate-800 flex-col items-center py-8 gap-8 z-50">
-                        <div className="text-fuchsia-500 mb-4 animate-pulse-slow">
+                    <nav className="hidden md:flex fixed left-0 top-0 bottom-0 w-24 bg-neutral-900 border-r border-neutral-800 flex-col items-center py-8 gap-8 z-50">
+                        <div className="text-pink-500 mb-4 animate-pulse-slow">
                             <Icon name="book-open-check" size={32} />
                         </div>
                         <div className="flex flex-col w-full px-2 gap-4">
@@ -1401,7 +1406,7 @@
                     </nav>
 
                     {/* Mobile Bottom Nav */}
-                    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur border-t border-slate-800 flex justify-around p-2 z-50 safe-area-bottom">
+                    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-neutral-900/95 backdrop-blur border-t border-neutral-800 flex justify-around p-2 z-50 safe-area-bottom">
                          <NavItem id="dashboard" icon="layout-dashboard" label="Home" />
                          <NavItem id="library" icon="library" label="Books" />
                          <NavItem id="log" icon="plus-circle" label="Log" />
@@ -1415,12 +1420,12 @@
                         {/* Header */}
                         <header className="flex justify-between items-center mb-8">
                             <div>
-                                <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-400 to-violet-200">ReadQuest</h1>
-                                <p className="text-xs text-gray-500 font-mono">Build v1.6 • Local Storage Active</p>
+                                <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-violet-200">ReadQuest</h1>
+                                <p className="text-xs text-neutral-500 font-mono">Build v1.7 • Local Storage Active</p>
                             </div>
-                            <div className="flex items-center gap-3 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
-                                <div className="w-2 h-2 rounded-full bg-fuchsia-500 animate-pulse"></div>
-                                <span className="text-xs font-mono text-fuchsia-400">ONLINE</span>
+                            <div className="flex items-center gap-3 bg-neutral-800 px-3 py-1.5 rounded-full border border-neutral-700">
+                                <div className="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></div>
+                                <span className="text-xs font-mono text-pink-400">ONLINE</span>
                             </div>
                         </header>
 
@@ -1435,7 +1440,7 @@
 
                     {/* Toast Notification */}
                     {notification && (
-                        <div className="fixed top-4 right-4 md:bottom-8 md:right-8 md:top-auto bg-fuchsia-600 text-white px-6 py-3 rounded-lg shadow-2xl flex items-center gap-3 animate-fade-in z-[100]">
+                        <div className="fixed top-4 right-4 md:bottom-8 md:right-8 md:top-auto bg-pink-600 text-white px-6 py-3 rounded-lg shadow-2xl flex items-center gap-3 animate-fade-in z-[100]">
                             <Icon name="check-circle" size={20} />
                             <span className="font-bold">{notification}</span>
                         </div>
