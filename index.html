@@ -483,25 +483,63 @@
 
             const Library = () => {
                 const [showAddModal, setShowAddModal] = useState(false);
-                const [activeTab, setActiveTab] = useState('reading'); // reading, tbr, completed, dnf
+                const [activeTab, setActiveTab] = useState('reading'); // all, reading, tbr, completed, dnf
                 const [newBook, setNewBook] = useState({ title: '', author: '', totalPages: '', coverUrl: '', status: 'reading' });
+                const [editingId, setEditingId] = useState(null);
 
-                const handleAddBook = (e) => {
+                const openAddModal = () => {
+                    setEditingId(null);
+                    setNewBook({ title: '', author: '', totalPages: '', coverUrl: '', status: 'reading' });
+                    setShowAddModal(true);
+                };
+
+                const openEditModal = (book, e) => {
+                    e.stopPropagation(); // Prevent opening the book detail/action
+                    setEditingId(book.id);
+                    setNewBook({ 
+                        title: book.title, 
+                        author: book.author, 
+                        totalPages: book.totalPages, 
+                        coverUrl: book.coverUrl, 
+                        status: book.status 
+                    });
+                    setShowAddModal(true);
+                };
+
+                const handleSaveBook = (e) => {
                     e.preventDefault();
                     if (!newBook.title || !newBook.totalPages) return;
+
+                    if (editingId) {
+                        // Update existing book
+                        const updatedBooks = books.map(b => b.id === editingId ? { 
+                            ...b, 
+                            ...newBook, 
+                            totalPages: parseInt(newBook.totalPages) 
+                        } : b);
+                        
+                        // Sync log titles if book title changed
+                        const updatedLogs = logs.map(l => l.bookId === editingId ? { ...l, bookTitle: newBook.title } : l);
+
+                        setBooks(updatedBooks);
+                        setLogs(updatedLogs);
+                        showNotification("Book updated successfully!");
+                    } else {
+                        // Add new book
+                        const book = {
+                            id: generateId(),
+                            ...newBook,
+                            totalPages: parseInt(newBook.totalPages),
+                            currentPage: 0,
+                            addedAt: new Date().toISOString()
+                        };
+                        setBooks([book, ...books]);
+                        showNotification("Book added to library!");
+                    }
                     
-                    const book = {
-                        id: generateId(),
-                        ...newBook,
-                        totalPages: parseInt(newBook.totalPages),
-                        currentPage: 0,
-                        addedAt: new Date().toISOString()
-                    };
-                    
-                    setBooks([book, ...books]);
                     setShowAddModal(false);
                     setNewBook({ title: '', author: '', totalPages: '', coverUrl: '', status: 'reading' });
-                    showNotification("Book added to library!");
+                    setEditingId(null);
                 };
 
                 const changeBookStatus = (bookId, newStatus) => {
@@ -516,6 +554,7 @@
 
                 // Filter books by tab
                 const filteredBooks = books.filter(b => {
+                    if (activeTab === 'all') return true;
                     if (activeTab === 'reading') return b.status === 'reading';
                     if (activeTab === 'tbr') return b.status === 'tbr';
                     if (activeTab === 'completed') return b.status === 'completed';
@@ -527,7 +566,7 @@
                     <div className="space-y-6 animate-fade-in">
                         <div className="flex justify-between items-center flex-wrap gap-4">
                             <h2 className="text-2xl font-bold">My Library</h2>
-                            <button onClick={() => setShowAddModal(true)} className="bg-pink-600 hover:bg-pink-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                            <button onClick={openAddModal} className="bg-pink-600 hover:bg-pink-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
                                 <Icon name="plus" size={18} /> Add Book
                             </button>
                         </div>
@@ -535,6 +574,7 @@
                         {/* Library Tabs */}
                         <div className="flex gap-1 bg-neutral-800/50 p-1 rounded-xl overflow-x-auto">
                             {[
+                                { id: 'all', label: 'All Books', icon: 'library' },
                                 { id: 'reading', label: 'Current', icon: 'book-open' },
                                 { id: 'tbr', label: 'Want to Read', icon: 'list' },
                                 { id: 'completed', label: 'Finished', icon: 'check-circle' },
@@ -548,18 +588,18 @@
                                     <Icon name={tab.icon} size={16} />
                                     {tab.label}
                                     <span className="ml-1 opacity-50 text-xs">
-                                        ({books.filter(b => b.status === tab.id).length})
+                                        ({tab.id === 'all' ? books.length : books.filter(b => b.status === tab.id).length})
                                     </span>
                                 </button>
                             ))}
                         </div>
 
-                        {/* Add Book Modal */}
+                        {/* Add/Edit Book Modal */}
                         {showAddModal && (
                             <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                                 <div className="bg-neutral-900 border border-neutral-700 p-6 rounded-2xl w-full max-w-md shadow-2xl animate-fade-in">
-                                    <h3 className="text-xl font-bold mb-4">Register New Book</h3>
-                                    <form onSubmit={handleAddBook} className="space-y-4">
+                                    <h3 className="text-xl font-bold mb-4">{editingId ? 'Edit Book Details' : 'Register New Book'}</h3>
+                                    <form onSubmit={handleSaveBook} className="space-y-4">
                                         <div>
                                             <label className="block text-sm text-neutral-400 mb-1">Book Title</label>
                                             <input autoFocus type="text" className="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-3 focus:outline-none focus:border-pink-500 transition-colors" placeholder="e.g. Dune" value={newBook.title} onChange={e => setNewBook({...newBook, title: e.target.value})} required />
@@ -574,7 +614,7 @@
                                                 <input type="number" className="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-3 focus:outline-none focus:border-pink-500 transition-colors" placeholder="0" value={newBook.totalPages} onChange={e => setNewBook({...newBook, totalPages: e.target.value})} required />
                                             </div>
                                             <div>
-                                                <label className="block text-sm text-neutral-400 mb-1">Initial Shelf</label>
+                                                <label className="block text-sm text-neutral-400 mb-1">Shelf Status</label>
                                                 <select 
                                                     className="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-3 focus:outline-none focus:border-pink-500 transition-colors appearance-none"
                                                     value={newBook.status}
@@ -583,6 +623,7 @@
                                                     <option value="reading">Currently Reading</option>
                                                     <option value="tbr">Want to Read</option>
                                                     <option value="completed">Completed</option>
+                                                    <option value="dnf">Dropped</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -592,7 +633,7 @@
                                         </div>
                                         <div className="flex gap-3 pt-2">
                                             <button type="button" onClick={() => setShowAddModal(false)} className="flex-1 bg-neutral-800 hover:bg-neutral-700 text-white py-3 rounded-lg transition-colors">Cancel</button>
-                                            <button type="submit" className="flex-1 bg-pink-600 hover:bg-pink-500 text-white py-3 rounded-lg font-bold transition-colors">Add Book</button>
+                                            <button type="submit" className="flex-1 bg-pink-600 hover:bg-pink-500 text-white py-3 rounded-lg font-bold transition-colors">{editingId ? 'Save Changes' : 'Add Book'}</button>
                                         </div>
                                     </form>
                                 </div>
@@ -610,7 +651,7 @@
                                     } size={32} className="text-neutral-500" />
                                 </div>
                                 <h3 className="text-xl font-bold text-neutral-400">This shelf is empty</h3>
-                                <p className="text-neutral-600 mt-2">No books found in '{activeTab === 'tbr' ? 'Want to Read' : activeTab === 'dnf' ? 'Dropped' : activeTab}'.</p>
+                                <p className="text-neutral-600 mt-2">No books found in this category.</p>
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -659,6 +700,13 @@
                                                     <div className="bg-neutral-800/80 text-neutral-400 px-3 py-1 rounded-full text-xs font-bold border border-neutral-600">Dropped</div>
                                                 </div>
                                             )}
+                                            {book.status === 'completed' && (
+                                                <div className="absolute top-2 left-2">
+                                                     <div className="bg-blue-600 text-white p-1 rounded-full shadow-lg">
+                                                        <Icon name="check" size={12} strokeWidth={4} />
+                                                     </div>
+                                                </div>
+                                            )}
 
                                             {/* Progress Overlay (Only for Reading/Completed) */}
                                             {(book.status === 'reading' || book.status === 'completed') && (
@@ -677,6 +725,10 @@
                                         
                                         {/* Quick Actions */}
                                         <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                                            <button onClick={(e) => openEditModal(book, e)} className="bg-neutral-900/80 p-1.5 rounded-full hover:bg-neutral-700 transition-colors text-neutral-400 hover:text-white" title="Edit Details">
+                                                <Icon name="edit-2" size={14} />
+                                            </button>
+                                            
                                             {book.status === 'reading' && (
                                                 <button onClick={(e) => {
                                                     e.stopPropagation();
@@ -1421,7 +1473,7 @@
                         <header className="flex justify-between items-center mb-8">
                             <div>
                                 <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-violet-200">ReadQuest</h1>
-                                <p className="text-xs text-neutral-500 font-mono">Build v1.7 • Local Storage Active</p>
+                                <p className="text-xs text-neutral-500 font-mono">Build v1.8 • Local Storage Active</p>
                             </div>
                             <div className="flex items-center gap-3 bg-neutral-800 px-3 py-1.5 rounded-full border border-neutral-700">
                                 <div className="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></div>
