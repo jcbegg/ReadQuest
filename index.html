@@ -3,22 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReadQuest - Reading Tracker (Hot Pink)</title>
+    <title>ReadQuest - Reading Tracker</title>
     
-    <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     
-    <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Tailwind Config for Dark Mode Customization -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -484,12 +479,13 @@
             const Library = () => {
                 const [showAddModal, setShowAddModal] = useState(false);
                 const [activeTab, setActiveTab] = useState('reading'); // all, reading, tbr, completed, dnf
-                const [newBook, setNewBook] = useState({ title: '', author: '', totalPages: '', coverUrl: '', status: 'reading' });
+                // Added startPage to initial state
+                const [newBook, setNewBook] = useState({ title: '', author: '', totalPages: '', coverUrl: '', status: 'reading', startPage: '' });
                 const [editingId, setEditingId] = useState(null);
 
                 const openAddModal = () => {
                     setEditingId(null);
-                    setNewBook({ title: '', author: '', totalPages: '', coverUrl: '', status: 'reading' });
+                    setNewBook({ title: '', author: '', totalPages: '', coverUrl: '', status: 'reading', startPage: '' });
                     setShowAddModal(true);
                 };
 
@@ -501,7 +497,8 @@
                         author: book.author, 
                         totalPages: book.totalPages, 
                         coverUrl: book.coverUrl, 
-                        status: book.status 
+                        status: book.status,
+                        startPage: book.startPage || 0 // Load existing startPage or 0
                     });
                     setShowAddModal(true);
                 };
@@ -509,14 +506,29 @@
                 const handleSaveBook = (e) => {
                     e.preventDefault();
                     if (!newBook.title || !newBook.totalPages) return;
+                    
+                    const startPageVal = parseInt(newBook.startPage) || 0;
+                    const totalPagesVal = parseInt(newBook.totalPages);
 
                     if (editingId) {
                         // Update existing book
-                        const updatedBooks = books.map(b => b.id === editingId ? { 
-                            ...b, 
-                            ...newBook, 
-                            totalPages: parseInt(newBook.totalPages) 
-                        } : b);
+                        const updatedBooks = books.map(b => {
+                            if(b.id === editingId) {
+                                // Logic: If startPage is updated, we might need to update currentPage if it was less than the new start page.
+                                // This assumes the user is correcting a mistake. 
+                                // We generally don't want to decrease currentPage unless reset, but we must ensure currentPage >= startPage.
+                                const newCurrent = b.currentPage < startPageVal ? startPageVal : b.currentPage;
+                                
+                                return { 
+                                    ...b, 
+                                    ...newBook, 
+                                    totalPages: totalPagesVal,
+                                    startPage: startPageVal,
+                                    currentPage: newCurrent
+                                };
+                            }
+                            return b;
+                        });
                         
                         // Sync log titles if book title changed
                         const updatedLogs = logs.map(l => l.bookId === editingId ? { ...l, bookTitle: newBook.title } : l);
@@ -529,8 +541,9 @@
                         const book = {
                             id: generateId(),
                             ...newBook,
-                            totalPages: parseInt(newBook.totalPages),
-                            currentPage: 0,
+                            totalPages: totalPagesVal,
+                            startPage: startPageVal,
+                            currentPage: startPageVal, // Initialize current page to start page
                             addedAt: new Date().toISOString()
                         };
                         setBooks([book, ...books]);
@@ -538,7 +551,7 @@
                     }
                     
                     setShowAddModal(false);
-                    setNewBook({ title: '', author: '', totalPages: '', coverUrl: '', status: 'reading' });
+                    setNewBook({ title: '', author: '', totalPages: '', coverUrl: '', status: 'reading', startPage: '' });
                     setEditingId(null);
                 };
 
@@ -614,18 +627,22 @@
                                                 <input type="number" className="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-3 focus:outline-none focus:border-pink-500 transition-colors" placeholder="0" value={newBook.totalPages} onChange={e => setNewBook({...newBook, totalPages: e.target.value})} required />
                                             </div>
                                             <div>
-                                                <label className="block text-sm text-neutral-400 mb-1">Shelf Status</label>
-                                                <select 
-                                                    className="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-3 focus:outline-none focus:border-pink-500 transition-colors appearance-none"
-                                                    value={newBook.status}
-                                                    onChange={e => setNewBook({...newBook, status: e.target.value})}
-                                                >
-                                                    <option value="reading">Currently Reading</option>
-                                                    <option value="tbr">Want to Read</option>
-                                                    <option value="completed">Completed</option>
-                                                    <option value="dnf">Dropped</option>
-                                                </select>
+                                                <label className="block text-sm text-neutral-400 mb-1" title="Pages read before tracking">Start Page</label>
+                                                <input type="number" className="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-3 focus:outline-none focus:border-pink-500 transition-colors" placeholder="0" value={newBook.startPage} onChange={e => setNewBook({...newBook, startPage: e.target.value})} />
                                             </div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm text-neutral-400 mb-1">Shelf Status</label>
+                                            <select 
+                                                className="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-3 focus:outline-none focus:border-pink-500 transition-colors appearance-none"
+                                                value={newBook.status}
+                                                onChange={e => setNewBook({...newBook, status: e.target.value})}
+                                            >
+                                                <option value="reading">Currently Reading</option>
+                                                <option value="tbr">Want to Read</option>
+                                                <option value="completed">Completed</option>
+                                                <option value="dnf">Dropped</option>
+                                            </select>
                                         </div>
                                         <div>
                                             <label className="block text-sm text-neutral-400 mb-1">Cover Image URL</label>
@@ -807,6 +824,10 @@
                             
                             if (bookLogs.length > 0) {
                                 newPage = bookLogs[0].endPage;
+                            } else {
+                                // If no logs left, revert to startPage of the book (not 0)
+                                const book = books.find(b => b.id === logToDelete.bookId);
+                                newPage = book ? (book.startPage || 0) : 0;
                             }
                         }
 
@@ -1473,7 +1494,7 @@
                         <header className="flex justify-between items-center mb-8">
                             <div>
                                 <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-violet-200">ReadQuest</h1>
-                                <p className="text-xs text-neutral-500 font-mono">Build v1.9 • Local Storage Active</p>
+                                <p className="text-xs text-neutral-500 font-mono">Build v1.9.1 • Local Storage Active</p>
                             </div>
                             <div className="flex items-center gap-3 bg-neutral-800 px-3 py-1.5 rounded-full border border-neutral-700">
                                 <div className="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></div>
