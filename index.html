@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReadQuest - Reading Tracker (No Crop)</title>
+    <title>ReadQuest - Reading Tracker v1.9.3</title>
     
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
@@ -1372,7 +1372,16 @@
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `readquest_backup_${getTodayDate()}.json`;
+                    
+                    const now = new Date();
+                    const yy = String(now.getFullYear()).slice(-2);
+                    const mm = String(now.getMonth() + 1).padStart(2, '0');
+                    const dd = String(now.getDate()).padStart(2, '0');
+                    const hh = String(now.getHours()).padStart(2, '0');
+                    const min = String(now.getMinutes()).padStart(2, '0');
+                    const ss = String(now.getSeconds()).padStart(2, '0');
+
+                    a.download = `readquest_backup_${yy}${mm}${dd}_${hh}${min}${ss}.json`;
                     a.click();
                     showNotification("Data exported successfully!");
                 };
@@ -1499,7 +1508,7 @@
                         <header className="flex justify-between items-center mb-8">
                             <div>
                                 <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-violet-200">ReadQuest</h1>
-                                <p className="text-xs text-neutral-500 font-mono">Build v1.9.2 • Local Storage Active</p>
+                                <p className="text-xs text-neutral-500 font-mono">Build v1.9.3</p>
                             </div>
                             <div className="flex items-center gap-3 bg-neutral-800 px-3 py-1.5 rounded-full border border-neutral-700">
                                 <div className="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></div>
